@@ -25,8 +25,6 @@ export class LoginComponent {
       console.log('User Logging In', username);
 
       await authentication_request(JSON.stringify({ username: username, password: password }));
-      // Here you would call your Auth Service
-      // this.authService.login(username, password);
     }
   }
 }
