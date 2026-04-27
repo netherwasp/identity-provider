@@ -1,6 +1,11 @@
 # identity-provider
 An Identity Server Developed in Rust
 
+# For Debugging
+```cmd
+RUST_LOG=debug cargo run
+```
+
 # For Login page
 ### Building wasm package
 1. Open the Folder directory api_wasm
