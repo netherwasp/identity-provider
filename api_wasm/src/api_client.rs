@@ -66,9 +66,9 @@ impl ApiClient {
         self
     }
     pub async fn with_csrf(self) -> Result<Self, JsValue> {
-        if let Some(_token) = get_csrf() {
-            // return Ok(self.with_header("X-CSRF-Token", token));
-            clear_csrf();
+        if let Some(token) = get_csrf() {
+            return Ok(self.with_header("X-CSRF-Token", token));
+            // clear_csrf();
         }
 
         let api = ApiClient::new(&self.request_uri);
