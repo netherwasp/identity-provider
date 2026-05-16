@@ -4,7 +4,7 @@ wasm:
 	cd ../api_wasm && wasm-pack build --target web --out-dir ../login_page/src/assets/wasm_package
 
 frontend:
-	cd ../login_page && ng build --configuration production --output-path ../idp-server/src/priv
+	cd ../login_page && ng build --configuration production --base-href /auth/ --deploy-url /auth/ --output-path ../idp-server/src/priv
 
 server:
 	cd ../idp-server && cargo run
