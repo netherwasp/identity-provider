@@ -1,7 +1,7 @@
 use wasm_bindgen::prelude::*;
 mod api_client;
 mod shared;
-use api_client::{ApiClient, get_csrf, set_csrf};
+use api_client::{ApiClient, clear_csrf, get_csrf, set_csrf};
 
 use shared::interfaces::{AuthLogin, CsrfJson};
 
@@ -15,14 +15,16 @@ pub async fn ensure_csrf() -> Result<String, String> {
     }
 
     let api = ApiClient::new(HOST_IDP);
-    match api.with_cookie().get("/csrf", None).await {
-        Ok(response) => {
-            let text = response.as_str();
-            let json: CsrfJson = serde_json::from_str(&text).map_err(|e| e.to_string())?;
-            set_csrf(json.token.clone());
-            Ok(json.token)
+    match api.with_cookie().get_csrf().await {
+        Ok((_, Some(token))) => {
+            set_csrf(token.clone());
+            Ok(token)
         }
-        Err(e) => Err(e.into()),
+        Ok((_, None)) => Err("No X-CSRF-Token in response header".into()),
+        Err(e) => {
+            clear_csrf();
+            Err(e)
+        }
     }
 }
 
@@ -49,6 +51,6 @@ pub async fn authentication_request(json_string: &str) -> Result<JsValue, JsValu
 
             Ok(response.into())
         }
-        _ => Err("Request Error".into()),
+        _ => Err(format!("Failed to parse AuthLogin from: {}", json_string).into()),
     }
 }

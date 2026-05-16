@@ -30,7 +30,7 @@ pub fn get_csrf() -> Option<String> {
         c.borrow().as_ref().and_then(|state| {
             let age = Date::now() - state.fetched_at;
             if age < CSRF_TTL_MS {
-                Some(state.token.clone()) 
+                Some(state.token.clone())
             } else {
                 None
             }
@@ -70,15 +70,13 @@ impl ApiClient {
             return Ok(self.with_header("X-CSRF-Token", token));
             // clear_csrf();
         }
-
         let api = ApiClient::new(&self.request_uri);
-        match api.with_cookie().get("/csrf", None).await {
-            Ok(response) => {
-                let text = response.as_str();
-                let json: CsrfJson = serde_json::from_str(&text).map_err(|e| e.to_string())?;
-                set_csrf(json.token.clone());
-                Ok(self.with_header("X-CSRF-Token", json.token.clone()))
+        match api.with_cookie().get_csrf().await {
+            Ok((_, Some(token))) => {
+                set_csrf(token.clone());
+                Ok(self.with_header("X-CSRF-Token", token))
             }
+            Ok((_, None)) => Err("No X-CSRF-Token in response header".into()),
             Err(e) => {
                 clear_csrf();
                 Err(e.into())
@@ -137,6 +135,24 @@ impl ApiClient {
         };
 
         response
+    }
+
+    pub async fn get_csrf(&self) -> Result<(String, Option<String>), String> {
+        let req = self.request_builder(Method::GET, "/csrf");
+        let response = req
+            .build()
+            .map_err(|e| e.to_string())?
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+
+        let csrf_token = response
+            .headers()
+            .get("X-CSRF-Token")
+            .map(|v| v.to_string());
+
+        let text = response.text().await.map_err(|e| e.to_string())?;
+        Ok((text, csrf_token))
     }
 
     pub async fn post(&self, endpoint: &str, body: Option<&str>) -> Result<String, String> {
