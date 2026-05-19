@@ -1,6 +1,15 @@
 # identity-provider
 An Identity Server Developed in Rust
 
+# For Initialization
+### Create .env
+1.  Create A .env inside idp-server
+```env
+    SUPER_ADMIN_URL = postgres://postgres:sample_secret@localhost:5432/postgres
+    IDP_ADMIN_URL = postgres://idp_admin:sample_secret@localhost:5432/sample_db
+```
+
+
 # For Debugging
 ```cmd
 RUST_LOG=debug cargo run
