@@ -1,7 +1,7 @@
 {
-    "issuer": "https://127.0.0.1:3000",
-    "authorization_endpoint": "https://127.0.0.1:3000/authorize",
-    "token_endpoint": "https://127.0.0.1:3000/token",
+    "issuer": "http://127.0.0.1:3000",
+    "authorization_endpoint": "http://127.0.0.1:3000/authorize",
+    "token_endpoint": "http://127.0.0.1:3000/token",
     "token_endpoint_auth_methods_supported": [
         "client_secret_basic",
         "private_key_jwt"
@@ -10,11 +10,11 @@
         "RS256",
         "ES256"
     ],
-    "userinfo_endpoint": "https://127.0.0.1:3000/userinfo",
-    "check_session_iframe": "https://127.0.0.1:3000/check_session",
-    "end_session_endpoint": "https://127.0.0.1:3000/end_session",
-    "jwks_uri": "https://127.0.0.1:3000/jwks.json",
-    "registration_endpoint": "https://127.0.0.1:3000/register",
+    "userinfo_endpoint": "http://127.0.0.1:3000/userinfo",
+    "check_session_iframe": "http://127.0.0.1:3000/check_session",
+    "end_session_endpoint": "http://127.0.0.1:3000/end_session",
+    "jwks_uri": "http://127.0.0.1:3000/jwks.json",
+    "registration_endpoint": "http://127.0.0.1:3000/register",
     "scopes_supported": [
         "openid",
         "profile",
