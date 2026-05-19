@@ -15,3 +15,26 @@ server-debug:
 run: wasm frontend server
 
 debug: wasm frontend server-debug
+
+# DATABASE CREATION
+DB_NAME=idp_db
+USER=idp_admin
+PASSWORD=poiuytre@73!
+
+.PHONY: createdb dropdb dropuser createuser psql
+
+createdb: 
+	psql -U postgres -c "CREATE DATABASE $(DB_NAME) OWNER $(USER);"
+
+dropdb:
+	psql -U postgres -c "DROP DATABASE $(DB_NAME);"
+
+dropuser:
+	psql -U postgres -c "DROP USER $(USER);"
+
+createuser:
+	psql -U postgres -c "CREATE USER $(USER) WITH PASSWORD '$(PASSWORD)';"
+	psql -U postgres -c "ALTER ROLE $(USER) WITH SUPERUSER;"
+
+psql:
+	psql -d $(DB_NAME) -U $(USER)
