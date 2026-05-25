@@ -57,8 +57,13 @@ async fn main() {
 
     let session = SessionManagerLayer::new(MemoryStore::default()).with_secure(false);
 
+    let register_service = ServiceBuilder::new()
+        .service(ServeDir::new("src/priv/register_service/browser"))
+        .fallback(ServeFile::new("src/priv/register_service/browser/index.html"));
+
     let login_service = ServiceBuilder::new().service(
-        ServeDir::new("src/priv/browser").fallback(ServeFile::new("src/priv/browser/index.html")),
+        ServeDir::new("src/priv/login_service/browser")
+            .fallback(ServeFile::new("src/priv/login_service/browser/index.html")),
     );
 
     let app = Router::new()

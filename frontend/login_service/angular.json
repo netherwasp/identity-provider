@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "login-page": {
+    "login-service": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -28,7 +28,7 @@
               "src/assets",
               {
                 "glob": "**/*",
-                "input": "login-page/src/assets/wasm_package",
+                "input": "login-service/src/assets/wasm_package",
                 "output": "assets"
               } 
             ],
@@ -64,10 +64,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "login-page:build:production"
+              "buildTarget": "login-service:build:production"
             },
             "development": {
-              "buildTarget": "login-page:build:development"
+              "buildTarget": "login-service:build:development"
             }
           },
           "defaultConfiguration": "development"

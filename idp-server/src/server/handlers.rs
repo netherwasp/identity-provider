@@ -29,7 +29,10 @@ pub async fn auth_login_handler(
     Json(request): Json<AuthLogin>,
 ) -> impl IntoResponse {
     println!("request: {:?}", request);
-    println!("state: {:?}", state);
+    // println!("state: {:?}", state);
     println!("session: {:?}", session);
+
+    // call the state here then transaction for db
+
     (StatusCode::OK, Json(json!({ "test": "test" }))).into_response()
 }

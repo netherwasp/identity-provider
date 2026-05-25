@@ -1,5 +1,6 @@
 use sqlx::{Executor, PgPool, postgres::PgPoolOptions};
 use url::Url;
+use serde_json::{Value, json};
 
 #[derive(Debug, Clone)]
 pub struct IdentityDatabase {
@@ -8,46 +9,13 @@ pub struct IdentityDatabase {
 }
 
 impl IdentityDatabase {
-    pub async fn set_super_admin_url(&self, admin_url: String) -> Self {
-        Self {
-            super_admin_url: admin_url,
-            idp_admin_url: None,
-        }
-    }
-
-    pub async fn super_admin_connect(&self) -> Result<PgPool, String> {
-        let pool = PgPoolOptions::new()
+    pub async fn idp_db_init(&mut self) -> Result<Self, String> {
+        let super_admin_pool = PgPoolOptions::new()
             .max_connections(5)
             .connect(self.super_admin_url.as_str())
             .await
             .map_err(|e| format!("Error: {:?}", e))?;
-        Ok(pool)
-    }
 
-    pub async fn idp_admin_connect(&self) -> Result<PgPool, String> {
-        let pool = PgPoolOptions::new()
-            .max_connections(5)
-            .connect(self.idp_admin_url.clone().unwrap_or_default().as_str())
-            .await
-            .map_err(|e| format!("Error: {:?}", e))?;
-        Ok(pool)
-    }
-
-    // pub async fn idp_admin_create(
-    //     &mut self,
-    //     username: String,
-    //     password: String,
-    // ) -> Result<Self, String> {
-    //     let super_admin_pool = self.super_admin_connect().await.unwrap();
-
-    //     Ok(Self {
-    //         super_admin_url: self.super_admin_url.clone(),
-    //         idp_admin_url: self.idp_admin_url.clone(),
-    //     })
-    // }
-
-    pub async fn idp_db_init(&mut self) -> Result<Self, String> {
-        let super_admin_pool = self.super_admin_connect().await.unwrap();
         let url = Url::parse(self.idp_admin_url.clone().unwrap().as_str()).expect("Invalid Url");
         let username = url.username().to_string();
         let password = url.password().unwrap_or_default().to_string();
@@ -87,9 +55,35 @@ impl IdentityDatabase {
                 .map_err(|e| format!("Error: {:?}", e))?;
         }
 
+        let _ = super_admin_pool.close();
         Ok(Self {
             super_admin_url: self.super_admin_url.clone(),
             idp_admin_url: self.idp_admin_url.clone(),
         })
+    }
+
+    pub async fn idp_admin_connect(&self) -> Result<IdentityPool, String> {
+        let pool = PgPoolOptions::new()
+            .max_connections(5)
+            .connect(self.idp_admin_url.clone().unwrap_or_default().as_str())
+            .await
+            .map_err(|e| format!("Error: {:?}", e))?;
+        Ok(IdentityPool { pool: pool })
+    }
+}
+
+// Database Transactions
+#[derive(Debug, Clone)]
+pub struct IdentityPool {
+    pub pool: PgPool,
+}
+
+impl IdentityPool {
+    pub async fn create_user(&self) -> Result<Value, String> {
+        let transaction = self.pool.begin().await.map_err(|e| format!("{e}"))?;
+        
+
+
+        Ok(json!({}))
     }
 }
