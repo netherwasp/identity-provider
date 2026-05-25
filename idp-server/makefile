@@ -2,7 +2,7 @@
 
 wasm:
 	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/login_service/src/assets/wasm_package
-# 	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/register_service/src/assets/wasm_package
+	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/register_service/src/assets/wasm_package
 
 frontend_login:
 	cd ../frontend/login_service && ng build --configuration production --base-href /auth/ --deploy-url /auth/ --output-path ../../idp-server/src/priv/login_service
