@@ -24,7 +24,7 @@ pub async fn csrf_handler(session: Session, token: CsrfToken) -> impl IntoRespon
 }
 
 pub async fn auth_login_handler(
-    State(state): State<ServerState>,
+    State(_state): State<ServerState>,
     session: Session,
     Json(request): Json<AuthLogin>,
 ) -> impl IntoResponse {

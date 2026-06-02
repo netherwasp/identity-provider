@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { authentication_request } from '../../../../assets/wasm_package/api_wasm';
 import { CommonModule } from '@angular/common';
-import { authentication_request } from '../../assets/wasm_package/api_wasm';
 
 @Component({
-  selector: 'app-login-component',
+  selector: 'app-login',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './login-component.html',
-  styleUrl: './login-component.scss',
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
-export class LoginComponent {
+export class Login {
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 

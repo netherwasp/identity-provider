@@ -8,7 +8,7 @@ use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::{ServeDir, ServeFile};
-use tower_sessions::{MemoryStore, SessionManagerLayer};
+use tower_sessions::SessionManagerLayer;
 use tower_sessions_sqlx_store::PostgresStore;
 
 use dotenvy::dotenv;
