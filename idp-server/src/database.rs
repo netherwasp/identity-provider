@@ -9,6 +9,8 @@ pub struct IdentityDatabase {
 }
 
 impl IdentityDatabase {
+    // pub async fn session_store(&self)
+
     pub async fn idp_db_init(&mut self) -> Result<Self, String> {
         let super_admin_pool = PgPoolOptions::new()
             .max_connections(5)
@@ -81,9 +83,6 @@ pub struct IdentityPool {
 impl IdentityPool {
     pub async fn create_user(&self) -> Result<Value, String> {
         let transaction = self.pool.begin().await.map_err(|e| format!("{e}"))?;
-        
-
-
         Ok(json!({}))
     }
 }

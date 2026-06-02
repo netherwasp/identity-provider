@@ -8,7 +8,7 @@ use crate::database::IdentityPool;
 #[derive(Debug, Clone)]
 pub struct ServerState {
     pub csrf_config: CsrfConfig,
-    pub database_state: IdentityPool,
+    pub database: IdentityPool,
 }
 
 // REQUEST STRUCT

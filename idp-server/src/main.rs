@@ -9,6 +9,7 @@ use tower::ServiceBuilder;
 use tower_http::cors::{Any, CorsLayer};
 use tower_http::services::{ServeDir, ServeFile};
 use tower_sessions::{MemoryStore, SessionManagerLayer};
+use tower_sessions_sqlx_store::PostgresStore;
 
 use dotenvy::dotenv;
 use std::env;
@@ -36,8 +37,8 @@ async fn main() {
     dotenv().expect(".env file not found");
 
     let mut db = IdentityDatabase {
-        super_admin_url: env::var("SUPER_ADMIN_URL").unwrap_or_default(),
-        idp_admin_url: Some(env::var("IDP_ADMIN_URL").unwrap_or_default()),
+        super_admin_url: env::var("SUPER_ADMIN_URL").expect("Missing SUPER_ADMIN_URL"),
+        idp_admin_url: Some(env::var("IDP_ADMIN_URL").expect("Missing IDP_ADMIN_URL")),
     };
 
     let state = ServerState {
@@ -46,7 +47,7 @@ async fn main() {
             .with_lifetime(Duration::days(1))
             .with_cookie_len(1024)
             .with_cookie_path("/"),
-        database_state: db
+        database: db
             .idp_db_init()
             .await
             .unwrap()
@@ -55,11 +56,10 @@ async fn main() {
             .unwrap(),
     };
 
-    let session = SessionManagerLayer::new(MemoryStore::default()).with_secure(false);
+    let session_store = PostgresStore::new(state.database.pool.clone());
+    let _ = session_store.migrate().await;
 
-    let register_service = ServiceBuilder::new()
-        .service(ServeDir::new("src/priv/register_service/browser"))
-        .fallback(ServeFile::new("src/priv/register_service/browser/index.html"));
+    let session_layer = SessionManagerLayer::new(session_store).with_secure(false);
 
     let auth_service = ServiceBuilder::new().service(
         ServeDir::new("src/priv/auth_service/browser")
@@ -72,7 +72,7 @@ async fn main() {
         .route("/csrf", get(csrf_handler))
         .with_state(state.clone())
         .layer(CsrfLayer::new(state.csrf_config.clone()))
-        .layer(session)
+        .layer(session_layer)
         // layer for database
         .layer(cors);
 
