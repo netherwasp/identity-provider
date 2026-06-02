@@ -61,13 +61,13 @@ async fn main() {
         .service(ServeDir::new("src/priv/register_service/browser"))
         .fallback(ServeFile::new("src/priv/register_service/browser/index.html"));
 
-    let login_service = ServiceBuilder::new().service(
-        ServeDir::new("src/priv/login_service/browser")
-            .fallback(ServeFile::new("src/priv/login_service/browser/index.html")),
+    let auth_service = ServiceBuilder::new().service(
+        ServeDir::new("src/priv/auth_service/browser")
+            .fallback(ServeFile::new("src/priv/auth_service/browser/index.html")),
     );
 
     let app = Router::new()
-        .nest_service("/auth", login_service)
+        .nest_service("/auth", auth_service)
         .route("/auth/login", post(auth_login_handler))
         .route("/csrf", get(csrf_handler))
         .with_state(state.clone())

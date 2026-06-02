@@ -1,5 +1,5 @@
 {
-  "name": "login-service",
+  "name": "auth-service",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

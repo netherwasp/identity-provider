@@ -1,11 +1,11 @@
 .PHONY: wasm frontend_login frontend_register server run debug
 
 wasm:
-	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/login_service/src/assets/wasm_package
-	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/register_service/src/assets/wasm_package
+	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/auth_service/src/assets/wasm_package
+# 	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/register_service/src/assets/wasm_package
 
 frontend_login:
-	cd ../frontend/login_service && ng build --configuration production --base-href /auth/ --deploy-url /auth/ --output-path ../../idp-server/src/priv/login_service
+	cd ../frontend/auth_service && ng build --configuration production --base-href /auth/ --deploy-url /auth/ --output-path ../../idp-server/src/priv/auth_service
 
 frontend_register:
 	cd ../frontend/register_service && ng build --configuration production --base-href /register/ --deploy-url /register/ --output-path ../../idp-server/src/priv/register_service
