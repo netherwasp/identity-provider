@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { authentication_request } from '../../../../assets/wasm_package/api_wasm';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
 export class Login {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private router: Router, private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -26,5 +27,9 @@ export class Login {
 
       await authentication_request(JSON.stringify({ username: username, password: password }));
     }
+  }
+
+  async onSignUp(){
+    this.router.navigate(["/register"]);
   }
 }

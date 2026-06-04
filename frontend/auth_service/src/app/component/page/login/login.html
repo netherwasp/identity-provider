@@ -1,8 +1,8 @@
 <div class="login-container">
   <div class="login-card">
     <h2>Identity Provider</h2>
-    <p>Please enter your details to sign in.</p>
-
+    <p>Not a member? <a (click)="onSignUp()">Sign-Up Now</a></p>
+    
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
       <div class="input-group">
         <label>Username</label>
