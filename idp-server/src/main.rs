@@ -1,5 +1,6 @@
 use axum::{
     Router,
+    http::{HeaderValue, Method, header},
     routing::{get, post},
 };
 use axum_csrf::{CsrfConfig, CsrfLayer};
@@ -29,11 +30,31 @@ use crate::database::IdentityDatabase;
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
+
+    // let cors = CorsLayer::new()
+    // .allow_origin("http://localhost:4200".parse::<HeaderValue>().unwrap())
+    // .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+    // .allow_headers([
+    //     header::CONTENT_TYPE,
+    //     header::AUTHORIZATION,
+    //     header::ACCEPT,
+    //     header::COOKIE,
+    //     header::SET_COOKIE,
+    // ])
+    // .allow_credentials(true);
+
     let cors = CorsLayer::new()
         .allow_origin(Any)
-        .allow_methods(Any)
-        .allow_headers(Any);
-
+        .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
+        .allow_headers([
+            header::CONTENT_TYPE,
+            header::AUTHORIZATION,
+            header::ACCEPT,
+            header::COOKIE,
+            header::SET_COOKIE,
+        ]);
+        // .allow_credentials(true);
+    
     dotenv().expect(".env file not found");
 
     let mut db = IdentityDatabase {

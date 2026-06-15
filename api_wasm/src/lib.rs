@@ -40,7 +40,7 @@ pub async fn authentication_request(json_string: &str) -> Result<JsValue, JsValu
                 .with_csrf()
                 .await?
                 .post(
-                    "/auth",
+                    "/auth/login",
                     Some(
                         serde_json::to_string::<AuthLogin>(&auth_json.hash_password())
                             .unwrap()
