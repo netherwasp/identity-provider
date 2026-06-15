@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import './tailwind.css';
+
 *,
 *::before,
 *::after {
@@ -10,5 +12,6 @@
 html,
 body,
 #root {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     overflow: hidden;
 }

@@ -1,19 +1,24 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { authentication_request } from '../../../../assets/wasm_package/api_wasm';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+import { authentication_request } from '../../../../assets/wasm_package/api_wasm';
+import { ButtonModule } from 'primeng/button';
+
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   loginForm: FormGroup;
 
-  constructor(private router: Router, private fb: FormBuilder) {
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+  ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -29,7 +34,7 @@ export class Login {
     }
   }
 
-  async onSignUp(){
-    this.router.navigate(["/register"]);
+  async onSignUp() {
+    this.router.navigate(['/register']);
   }
 }

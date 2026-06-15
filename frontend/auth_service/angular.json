@@ -30,7 +30,7 @@
                 "glob": "**/*",
                 "input": "auth-service/src/assets/wasm_package",
                 "output": "assets"
-              } 
+              }
             ],
             "styles": [
               "src/styles.scss"

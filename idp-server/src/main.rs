@@ -66,6 +66,7 @@ async fn main() {
             .fallback(ServeFile::new("src/priv/auth_service/browser/index.html")),
     );
 
+    tracing::debug!("state {:?}", state);
     let app = Router::new()
         .nest_service("/auth", auth_service)
         .route("/auth/login", post(auth_login_handler))
