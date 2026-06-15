@@ -40,8 +40,7 @@ async fn main() {
     //     header::ACCEPT,
     //     header::COOKIE,
     //     header::SET_COOKIE,
-    // ])
-    // .allow_credentials(true);
+    // ]);
 
     let cors = CorsLayer::new()
         .allow_origin(Any)

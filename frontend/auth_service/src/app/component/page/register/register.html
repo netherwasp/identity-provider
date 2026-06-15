@@ -1,1 +1,29 @@
-<p>register works!</p>
+<div class="register-container">
+    <div class="register-card">
+        <div class="side-content">
+            <h2>Cyclops <br> Register</h2>
+            <div class="matrix-container">
+                @for (col of columns; track $index) {
+                <div class="matrix-column" [style.--x]="col.x + 'px'" [style.--speed]="col.speed + 's'"
+                    [style.--offset]="col.offset + '%'">
+                    @for (char of col.chars; track $index) {
+                    <span class="matrix-alphanum">{{ char }}</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        <div class="main-content">
+
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
+                <p-inputgroup>
+                    <p-inputgroup-addon>
+                        <i class="pi pi-user"></i>
+                    </p-inputgroup-addon>
+                    <input pInputText [(ngModel)]="user" placeholder="Username" />
+                </p-inputgroup>
+            </form>
+        </div>
+
+    </div>
+</div>
