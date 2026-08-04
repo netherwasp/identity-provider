@@ -1,32 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControlOptions,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
   FormGroup,
   FormBuilder,
   Validators,
   ReactiveFormsModule,
-  FormsModule,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @Component({
   selector: 'app-register',
-  imports: [
-    FormsModule,
-    CommonModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule],
   standalone: true,
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
-export class Register {
+export class Register implements OnInit {
   ngOnInit() {
     this.initColumns();
     this.startMatrixLoop();
@@ -38,25 +32,14 @@ export class Register {
   private readonly NUM_CHARS = 20;
 
   initColumns() {
-    const containerWidth = 240; // match your side-content width
+    const containerWidth = 240;
     const numCols = Math.floor(containerWidth / this.COL_WIDTH);
-
     this.columns = Array.from({ length: numCols }, (_, i) => ({
       x: i * this.COL_WIDTH,
       chars: Array.from({ length: this.NUM_CHARS }, () => this.getRandomChar()),
       speed: Math.random() * 3 + 2,
       offset: Math.random() * -100,
     }));
-  }
-
-  alphanum: string[] = [];
-
-  getRandomX(): string {
-    return `${Math.random() * 100}vw`;
-  }
-
-  getSpeed(): string {
-    return `${Math.random() * 2 + 1}s`;
   }
 
   startMatrixLoop() {
@@ -73,20 +56,54 @@ export class Register {
     return chars.charAt(Math.floor(Math.random() * chars.length));
   }
   // =======================================================================
+
+  // Form controls are named after standard OIDC claims so the payload can be
+  // sent straight through without a remapping step. `password` /
+  // `confirmPassword` are the only non-claim fields (credentials, not
+  // identity data) and are stripped before building the claims payload.
   registerForm: FormGroup;
-  user: string | undefined;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
   ) {
-    this.registerForm = this.fb.group({});
+    this.registerForm = this.fb.group(
+      {
+        preferred_username: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        given_name: ['', Validators.required],
+        family_name: ['', Validators.required],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', Validators.required],
+      },
+      { validators: this.passwordsMatch } as AbstractControlOptions,
+    );
   }
 
+  private passwordsMatch: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { passwordMismatch: true };
+  };
+
   async onRegister() {
-    if (this.registerForm.valid) {
-      const { username, password } = this.registerForm.value;
-      console.log('User Logging In', username);
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
+
+    const { confirmPassword, password, ...claims } = this.registerForm.value;
+
+    // Standard OIDC claims payload — sent to the IDP's registration
+    // endpoint. `password` travels alongside it for credential creation but
+    // is not itself a claim.
+    const payload = {
+      claims,
+      password,
+    };
+
+    console.log('Registration payload', payload);
+    // TODO: wire up HttpClient call to the Axum registration endpoint once
+    // the route is confirmed.
   }
 }

@@ -14,16 +14,45 @@
             </div>
         </div>
         <div class="main-content">
-
             <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
-                <p-inputgroup>
-                    <p-inputgroup-addon>
-                        <i class="pi pi-user"></i>
-                    </p-inputgroup-addon>
-                    <input pInputText [(ngModel)]="user" placeholder="Username" />
-                </p-inputgroup>
+                <div class="input-group">
+                    <label for="given_name">First Name</label>
+                    <input id="given_name" type="text" formControlName="given_name" placeholder="First name" />
+                </div>
+
+                <div class="input-group">
+                    <label for="family_name">Last Name</label>
+                    <input id="family_name" type="text" formControlName="family_name" placeholder="Last name" />
+                </div>
+
+                <div class="input-group">
+                    <label for="preferred_username">Username</label>
+                    <input id="preferred_username" type="text" formControlName="preferred_username"
+                        placeholder="Username" />
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" formControlName="email" placeholder="Email" />
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" formControlName="password" placeholder="Password" />
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input id="confirmPassword" type="password" formControlName="confirmPassword"
+                        placeholder="Confirm password" />
+                </div>
+
+                @if (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched) {
+                <p class="error-text">Passwords do not match.</p>
+                }
+
+                <p-button type="submit" label="Register" [disabled]="registerForm.invalid"></p-button>
             </form>
         </div>
-
     </div>
 </div>
