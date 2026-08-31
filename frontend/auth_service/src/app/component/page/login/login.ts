@@ -1,19 +1,31 @@
-import { Component } from '@angular/core';
+import { authentication_request } from '../../../../assets/wasm_package/api_wasm';
+import { Component, signal } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-import { authentication_request } from '../../../../assets/wasm_package/api_wasm';
+import { MessageModule } from 'primeng/message';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, ButtonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    MessageModule,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
   loginForm: FormGroup;
+  password_type = signal<string>('password');
 
   constructor(
     private router: Router,
@@ -36,5 +48,13 @@ export class Login {
 
   async onSignUp() {
     this.router.navigate(['/register']);
+  }
+
+  change_type() {
+    if (this.password_type() === 'text') {
+      this.password_type.set('password');
+    } else {
+      this.password_type.set('text');
+    }
   }
 }

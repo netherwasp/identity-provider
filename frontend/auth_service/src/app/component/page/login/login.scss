@@ -1,3 +1,53 @@
+:host ::ng-deep {
+  .p-iconfield {
+    position: relative;
+    display: block;
+  }
+
+  p-inputicon {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    align-items: center;
+    line-height: 1;
+    margin: 0 !important;
+    color: var(--i-text-muted-color);
+
+    &:first-of-type {
+      left: 0.9rem;
+    }
+
+    &:last-of-type:not(:first-of-type) {
+      right: 0.9rem;
+      left: auto;
+      cursor: pointer;
+      padding: 0.4rem;
+      border-radius: 50%;
+      color: var(--i-primary-400);
+      transition: background 0.15s, color 0.15s, transform 0.15s;
+
+      &:hover {
+        background: color-mix(in srgb, var(--i-primary-color) 15%, transparent);
+        color: var(--i-primary-color);
+        transform: translateY(-50%) scale(1.15);
+      }
+
+      &:active {
+        transform: translateY(-50%) scale(0.95);
+      }
+    }
+  }
+}
+
+.field-with-icon input {
+  padding-left: 2.75rem;
+}
+
+.field-with-toggle input {
+  padding-right: 2.75rem;
+}
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -8,14 +58,41 @@
 }
 
 .login-card {
+  display: flex;
+  flex-direction: column;
   background: var(--i-surface-card);
   border: 1px solid var(--i-primary-color);
   border-radius: 0;
-  padding: 2rem;
+  padding: 1.4rem;
   width: 100%;
-  max-width: 420px;
+  height: 540px;
+  max-width: 520px;
   box-shadow: 0 0 30px color-mix(in srgb, var(--i-primary-color) 40%, transparent);
   text-align: center;
+  box-sizing: border-box;
+}
+
+
+.login-content {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+}
+
+.field-error-slot {
+  margin-top: 0.35rem;
+}
+
+.submit-btn {
+  margin-top: auto;
+  margin-bottom: 2rem;
 }
 
 h2 {
@@ -38,7 +115,10 @@ a {
   color: var(--i-primary-color);
   cursor: pointer;
   font-weight: 500;
-  &:hover { text-decoration: underline; }
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .input-group {
@@ -51,8 +131,8 @@ label {
   font-size: 0.8rem;
   font-weight: 600;
   margin-bottom: 0.6rem;
-  color: var(--i-text-color);
   margin-left: 0.25rem;
+  color: var(--i-text-color);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -60,23 +140,23 @@ label {
 input {
   width: 100%;
   padding: 0.9rem 1.1rem;
+  box-sizing: border-box;
   background: var(--i-surface-100);
   border: 1px solid var(--i-surface-300);
   border-radius: 0;
   font-size: 1rem;
-  color: var(--i-text-color);
   font-family: var(--i-font-family);
+  color: var(--i-text-color);
   transition: all 0.2s;
-  box-sizing: border-box;
 
   &::placeholder {
     color: var(--i-text-muted-color);
   }
-}
 
-input:focus {
-  outline: none;
-  border-color: var(--i-primary-color);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--i-primary-color) 50%, transparent);
-  background: var(--i-surface-100);
+  &:focus {
+    outline: none;
+    border-color: var(--i-primary-color);
+    background: var(--i-surface-100);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--i-primary-color) 50%, transparent);
+  }
 }

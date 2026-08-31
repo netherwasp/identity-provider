@@ -1,22 +1,60 @@
 <div class="login-container">
   <div class="login-card">
-    <h2>Identity Provider</h2>
+    <h2>Cyclops <br> Identity Provider</h2>
     <p>Not a member? <a (click)="onSignUp()">Sign-Up Now</a></p>
-    
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
-      <div class="input-group">
-        <label>Username</label>
-        <input type="text" formControlName="username" placeholder="Enter username" required />
-      </div>
 
-      <div class="input-group">
-        <label>Password</label>
-        <input type="password" formControlName="password" placeholder="Enter password" required />
-      </div>
+    <div class="login-content">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="input-group">
+          <p-iconfield class="field-with-icon">
+            <p-inputicon>
+              <i class="pi pi-user"></i>
+            </p-inputicon>
+            <input type="text" formControlName="username" placeholder="Enter username" required />
+          </p-iconfield>
+          <div class="field-error-slot">
+            @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+            <p-message severity="error"  size="small">
+              @if (loginForm.get('username')?.hasError('required')) {
+              Username is required
+              } @else if (loginForm.get('username')?.hasError('minlength')) {
+              Username must be at least 3 characters
+              }
+            </p-message>
+            }
+          </div>
 
-      <p-button type="submit" [disabled]="loginForm.invalid">
-        Sign In
-      </p-button>
-    </form>
+        </div>
+
+        <div class="input-group">
+          <p-iconfield class="field-with-icon field-with-toggle">
+            <p-inputicon>
+              <i class="pi pi-lock"></i>
+            </p-inputicon>
+            <input [type]="password_type()" formControlName="password" placeholder="Enter password" required />
+            <p-inputicon (click)="change_type()">
+              <i class="pi" [class.pi-eye]="password_type() === 'password'"
+                [class.pi-eye-slash]="password_type() === 'text'"></i>
+            </p-inputicon>
+          </p-iconfield>
+          <div class="field-error-slot">
+            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <p-message severity="error" size="small">
+              @if (loginForm.get('password')?.hasError('required')) {
+              Password is required
+              } @else if (loginForm.get('password')?.hasError('minlength')) {
+              Password must be at least 3 characters
+              }
+            </p-message>
+            }
+
+          </div>
+        </div>
+
+        <p-button class="submit-btn"  type="submit" [disabled]="loginForm.invalid">
+          Sign In
+        </p-button>
+      </form>
+    </div>
   </div>
 </div>
