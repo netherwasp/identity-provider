@@ -39,11 +39,16 @@ pub async fn authentication_request(json_string: &str) -> Result<JsValue, JsValu
                 .with_cookie()
                 .with_csrf()
                 .await?
-                .post(
+                .request(
+                    "POST",
                     "/auth/login",
                     Some(
                         serde_json::to_string::<AuthLogin>(&auth_json.hash_password())
-                            .unwrap()
+                            .map_err(|e| {
+                                JsValue::from_str(&format!(
+                                    "Failed to serialize login payload: {e}"
+                                ))
+                            })?
                             .as_str(),
                     ),
                 )
