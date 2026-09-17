@@ -4,6 +4,7 @@ use axum::{
     routing::{get, post},
 };
 use axum_csrf::{CsrfConfig, CsrfLayer};
+use idp_server::key_manager::KeyWorker;
 use time::Duration;
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
@@ -14,8 +15,6 @@ use tower_sessions_sqlx_store::PostgresStore;
 
 use dotenvy::dotenv;
 use std::env;
-
-mod utils;
 
 mod database;
 
@@ -52,8 +51,8 @@ async fn main() {
             header::COOKIE,
             header::SET_COOKIE,
         ]);
-        // .allow_credentials(true);
-    
+    // .allow_credentials(true);
+
     dotenv().expect(".env file not found");
 
     let mut db = IdentityDatabase {
@@ -86,7 +85,7 @@ async fn main() {
             .fallback(ServeFile::new("src/priv/auth_service/browser/index.html")),
     );
 
-    tracing::debug!("state {:?}", state);
+    tracing::info!("state {:?}", state);
     let app = Router::new()
         .nest_service("/auth", auth_service)
         .route("/auth/login", post(auth_login_handler))
@@ -98,9 +97,15 @@ async fn main() {
         .layer(cors);
 
     let addr = "127.0.0.1:3000";
-    tracing::debug!("Listening on http://{}", addr);
+    tracing::info!("Listening on http://{}", addr);
 
     let listener = TcpListener::bind(addr).await.unwrap();
+
+    KeyWorker::new(
+        "src/key_manager/keys",
+        vec!["RS256", "ES256", "HS256", "RSA-OAEP-256", "A128KW"],
+    )
+    .generate();
 
     axum::serve(listener, app).await.unwrap();
 }
