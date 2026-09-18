@@ -16,3 +16,10 @@ body,
     font-family: 'Space Grotesk', system-ui, sans-serif;
     overflow: hidden;
 }
+
+@font-face {
+    font-family: 'OCR-A';
+    src: url('/assets/fonts/OCRAEXT.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

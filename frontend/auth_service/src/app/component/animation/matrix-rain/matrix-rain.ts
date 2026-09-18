@@ -10,17 +10,18 @@ export class MatrixRain {
   canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('matrain');
   private ctx!: CanvasRenderingContext2D;
   private rafId = 0;
-  columns = 0;
-  speeds: number[] = [];
-  drops: number[] = [];
+  columns = 0; // column size per rain
+  speeds: number[] = []; // fall speed per column
+  drops: number[] = []; // current vertical position
 
-  FONT_SIZE = 12;
-  HEAD = '#c9ffe3';
-  TAIL = '#13B074';
-  char_set: string[] = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()');
+  FONT_SIZE = 12; // size of character in px
+  HEAD = '#70ff9e';
+  TAIL = '#00ff41';
+  V_SPACING = 240; // vertical spacing for head and tail
+  char_set: string[] = Array.from({ length: 94 }, (_, i) => String.fromCharCode(33 + i));
 
   SPEED_MULTIPLIER = 0.8; // try 0.05–0.15, lower = slower
-  UPDATE_INTERVAL_MS = 60; // ms between updates; higher = calmer, more readable
+  UPDATE_INTERVAL_MS = 80; // ms between updates; higher = calmer, more readable
   private lastUpdate = 0;
 
   GLYPH_INTERVAL_MS = 250; // how often symbols change, independent of fall speed
@@ -33,8 +34,16 @@ export class MatrixRain {
     return this.canvasRef().nativeElement;
   }
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     this.ctx = this.canvas.getContext('2d')!;
+
+    try {
+      await document.fonts.load(`${this.FONT_SIZE}px "OCR-A"`);
+      await document.fonts.ready; // wait font for to load
+    } catch (err) {
+      console.warn('OCR-A font failed to load, falling back to monospace', err);
+    }
+
     this.resize();
     this.rafId = requestAnimationFrame(this.loop);
   }
@@ -66,7 +75,7 @@ export class MatrixRain {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.ctx.globalCompositeOperation = 'source-over';
-    this.ctx.font = this.FONT_SIZE + 'px monospace';
+    this.ctx.font = this.FONT_SIZE + 'px "OCR-A", monospace';
 
     for (let i = 0; i < this.columns; i++) {
       const x = i * this.FONT_SIZE;
@@ -78,7 +87,7 @@ export class MatrixRain {
       }
 
       this.ctx.fillStyle = this.TAIL;
-      this.ctx.fillText(this.glyph(), x, y);
+      this.ctx.fillText(this.glyph(), x, y + this.V_SPACING);
       this.ctx.fillStyle = this.HEAD;
       this.ctx.fillText(this.glyph(), x, y + this.FONT_SIZE);
 
