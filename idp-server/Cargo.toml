@@ -3,6 +3,8 @@ name = "idp-server"
 version = "0.1.0"
 edition = "2024"
 
+[workspace]
+
 [dependencies]
 axum = "0.8.9"
 axum_csrf = { version = "0.11.0", features = ["layer"] }
