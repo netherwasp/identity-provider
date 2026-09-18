@@ -12,51 +12,17 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { MatrixRain } from '../../animation/matrix-rain/matrix-rain';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, ReactiveFormsModule, ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, ButtonModule, MatrixRain],
   standalone: true,
   templateUrl: './register.html',
   styleUrl: './register.scss',
 })
 export class Register implements OnInit {
-  ngOnInit() {
-    this.initColumns();
-    this.startMatrixLoop();
-  }
-
-  // SIDE CONTENT FOR DESIGN ONLY ==========================================
-  columns: { x: number; chars: string[]; speed: number; offset: number }[] = [];
-  private readonly COL_WIDTH = 15;
-  private readonly NUM_CHARS = 20;
-
-  initColumns() {
-    const containerWidth = 240;
-    const numCols = Math.floor(containerWidth / this.COL_WIDTH);
-    this.columns = Array.from({ length: numCols }, (_, i) => ({
-      x: i * this.COL_WIDTH,
-      chars: Array.from({ length: this.NUM_CHARS }, () => this.getRandomChar()),
-      speed: Math.random() * 3 + 2,
-      offset: Math.random() * -100,
-    }));
-  }
-
-  startMatrixLoop() {
-    setInterval(() => {
-      this.columns.forEach((col) => {
-        const randomIndex = Math.floor(Math.random() * col.chars.length);
-        col.chars[randomIndex] = this.getRandomChar();
-      });
-    }, 100);
-  }
-
-  getRandomChar(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    return chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  // =======================================================================
-
+  ngOnInit() {}
   // Form controls are named after standard OIDC claims so the payload can be
   // sent straight through without a remapping step. `password` /
   // `confirmPassword` are the only non-claim fields (credentials, not
@@ -69,10 +35,10 @@ export class Register implements OnInit {
   ) {
     this.registerForm = this.fb.group(
       {
-        preferred_username: ['', [Validators.required, Validators.minLength(3)]],
+        preferred_username: ['', [Validators.required, Validators.minLength(6)]],
         email: ['', [Validators.required, Validators.email]],
-        given_name: ['', Validators.required],
-        family_name: ['', Validators.required],
+        given_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+        family_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required],
       },
@@ -102,7 +68,7 @@ export class Register implements OnInit {
       password,
     };
 
-    console.log('Registration payload', payload);
+    console.log('Registration payload', JSON.stringify(payload));
     // TODO: wire up HttpClient call to the Axum registration endpoint once
     // the route is confirmed.
   }
