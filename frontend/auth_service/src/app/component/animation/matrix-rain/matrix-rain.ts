@@ -7,7 +7,7 @@ import { Component, ElementRef, viewChild, HostListener } from '@angular/core';
   styleUrl: './matrix-rain.scss',
 })
 export class MatrixRain {
-  canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('matrain');
+  canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('matrix_rain');
   private ctx!: CanvasRenderingContext2D;
   private rafId = 0;
   columns = 0; // column size per rain
@@ -16,7 +16,7 @@ export class MatrixRain {
 
   FONT_SIZE = 12; // size of character in px
   HEAD = '#70ff9e';
-  TAIL = '#00ff41';
+  TAIL = '#00cc33';
   V_SPACING = 240; // vertical spacing for head and tail
   char_set: string[] = Array.from({ length: 94 }, (_, i) => String.fromCharCode(33 + i));
 
