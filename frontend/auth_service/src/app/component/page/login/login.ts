@@ -8,6 +8,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputIconModule } from 'primeng/inputicon';
 import { ButtonModule } from 'primeng/button';
+import { MatrixRain } from '../../animation/matrix-rain/matrix-rain';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ import { ButtonModule } from 'primeng/button';
     InputIconModule,
     InputTextModule,
     MessageModule,
+    MatrixRain,
   ],
   templateUrl: './login.html',
   styleUrl: './login.scss',

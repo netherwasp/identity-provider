@@ -1,4 +1,7 @@
 <div class="login-container">
+  <div class="matrix-rain">
+    <app-matrix-rain></app-matrix-rain>
+  </div>
   <div class="login-card">
     <h2>Cyclops <br> Identity Provider</h2>
     <p>Not a member? <a (click)="onSignUp()">Sign-Up Now</a></p>
@@ -11,7 +14,7 @@
             <p-inputicon>
               <i class="pi pi-user"></i>
             </p-inputicon>
-            <input type="text" formControlName="username" placeholder="Enter username" required />
+            <input pInputText type="text" formControlName="username" placeholder="Enter username" required />
           </p-iconfield>
           <div class="login-form-err">
             @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
@@ -30,7 +33,8 @@
             <p-inputicon>
               <i class="pi pi-lock"></i>
             </p-inputicon>
-            <input [type]="password_type()" formControlName="password" placeholder="Enter password" required />
+            <input pInputText [type]="password_type()" formControlName="password" placeholder="Enter password"
+              required />
             <p-inputicon (click)="change_type()">
               <i class="pi" [class.pi-eye]="password_type() === 'password'"
                 [class.pi-eye-slash]="password_type() === 'text'"></i>
