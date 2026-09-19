@@ -1,50 +1,126 @@
 <div class="register-container">
+    <div class="matrix-rain">
+        <app-matrix-rain></app-matrix-rain>
+    </div>
     <div class="register-card">
-        <div class="side-content">
-            <h2>Cyclops <br> Register</h2>
-            <div class="matrix-container">
-                <app-matrix-rain></app-matrix-rain>
-            </div>
-        </div>
         <div class="main-content">
+            <h2>Cyclops Register</h2>
+
             <form [formGroup]="registerForm" (ngSubmit)="onRegister()" novalidate>
+                <label>Personal Details</label>
                 <div class="input-group">
-                    <label for="given_name">First Name</label>
-                    <input id="given_name" type="text" formControlName="given_name" placeholder="First name" />
+                    <p-input-group>
+                        <p-inputgroup-addon>
+                            <svg data-p-icon="user" [size]="32"></svg>
+                        </p-inputgroup-addon>
+                        <p-iftalabel>
+                            <input pInputText id="given_name" type="text" formControlName="given_name" />
+                            <label for="given_name">First name</label>
+                        </p-iftalabel>
+                        <p-iftalabel>
+                            <input pInputText id="family_name" type="text" formControlName="family_name" />
+                            <label for="family_name">Last name</label>
+                        </p-iftalabel>
+                    </p-input-group>
                 </div>
 
                 <div class="input-group">
-                    <label for="family_name">Last Name</label>
-                    <input id="family_name" type="text" formControlName="family_name" placeholder="Last name" />
+                    <p-input-group>
+                        <p-inputgroup-addon>
+                            <svg data-p-icon="at" [size]="32"></svg>
+                        </p-inputgroup-addon>
+                        <p-iftalabel>
+                            <input pInputText id="email" type="email" formControlName="email" />
+                            <label for="email">Email</label>
+                        </p-iftalabel>
+                    </p-input-group>
                 </div>
 
                 <div class="input-group">
-                    <label for="preferred_username">Username</label>
-                    <input id="preferred_username" type="text" formControlName="preferred_username"
-                        placeholder="Username" />
+                    <p-input-group>
+                        <p-inputgroup-addon>
+                            <svg data-p-icon="phone" [size]="32"></svg>
+                        </p-inputgroup-addon>
+                        <p-select class="country-select" formControlName="country_code" [options]="countries"
+                            optionLabel="name" [filter]="true" filterBy="name,dial_code" placeholder="+00"
+                            appendTo="body">
+                            <ng-template #selectedItem let-country>
+                                <span class="country-selected">
+                                    <span class="country-flag">
+                                        {{ getCountryFlag(country.iso) }}
+                                    </span>
+
+                                    <span>{{ country.dial_code }}</span>
+                                </span>
+                            </ng-template>
+
+                            <ng-template #item let-country>
+                                <span class="country-option">
+                                    <span class="country-flag">
+                                        {{ getCountryFlag(country.iso) }}
+                                    </span>
+
+                                    <span>{{ country.name }}</span>
+
+                                    <span class="country-dial">
+                                        {{ country.dial_code }}
+                                    </span>
+                                </span>
+                            </ng-template>
+                        </p-select>
+
+                        <p-iftalabel>
+                            <input pInputText id="phone_number" type="tel" inputmode="tel"
+                                formControlName="phone_number" autocomplete="tel-national" />
+                            <label for="phone_number">Contact number</label>
+                        </p-iftalabel>
+                    </p-input-group>
+                </div>
+
+                <label>Profile</label>
+                <div class="input-group">
+                    <p-input-group>
+                        <p-inputgroup-addon>
+                            <svg data-p-icon="user" [size]="32"></svg>
+                        </p-inputgroup-addon>
+                        <p-iftalabel>
+                            <input pInputText id="username" type="text" formControlName="username" />
+                            <label for="username">Username</label>
+                        </p-iftalabel>
+                    </p-input-group>
+                </div>
+
+
+                <div class="input-group">
+                    <p-input-group>
+                        <p-inputgroup-addon>
+                            <svg data-p-icon="lock" [size]="32"></svg>
+                        </p-inputgroup-addon>
+                        <p-iftalabel>
+                            <input pInputText id="password" type="password" formControlName="password" />
+                            <label for="password">Password</label>
+                        </p-iftalabel>
+                    </p-input-group>
                 </div>
 
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" formControlName="email" placeholder="Email" />
-                </div>
-
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input id="password" type="password" formControlName="password" placeholder="Password" />
-                </div>
-
-                <div class="input-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input id="confirmPassword" type="password" formControlName="confirmPassword"
-                        placeholder="Confirm password" />
+                    <p-input-group>
+                        <p-inputgroup-addon>
+                            <svg data-p-icon="unlock" [size]="32"></svg>
+                        </p-inputgroup-addon>
+                        <p-iftalabel>
+                            <input pInputText id="confirmPassword" type="password" formControlName="confirmPassword" />
+                            <label for="password">Confirm password</label>
+                        </p-iftalabel>
+                    </p-input-group>
                 </div>
 
                 @if (registerForm.errors?.['passwordMismatch'] && registerForm.get('confirmPassword')?.touched) {
                 <p class="error-text">Passwords do not match.</p>
                 }
 
-                <p-button type="submit" label="Register" [disabled]="registerForm.invalid"></p-button>
+                <p-button class="form-submit" type="submit" label="Register"
+                    [disabled]="registerForm.invalid"></p-button>
             </form>
         </div>
     </div>

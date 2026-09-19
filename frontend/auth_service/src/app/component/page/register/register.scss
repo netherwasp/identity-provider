@@ -1,5 +1,15 @@
+.matrix-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
 .register-container {
     display: flex;
+    z-index: 1;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -8,77 +18,90 @@
 }
 
 .register-card {
+    z-index: 10;
     border-radius: 0;
     height: 100%;
     width: 100%;
-    max-width: 1040px;
-    max-height: 840px;
+    max-width: clamp(320px, 90vw, 640px);
+    max-height: clamp(480px, 90vh, 840px);
     box-shadow: 0 0 30px color-mix(in srgb, var(--i-primary-color) 40%, transparent);
     border: 1px solid var(--i-primary-color);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
 
-    .side-content {
-        width: 240px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-items: center;
-        background: var(--i-surface-card);
-        text-align: center;
-        box-sizing: border-box;
-        border-right: 1px solid var(--i-primary-color);
-        padding: 0.5rem;
-        z-index: 1;
-
-        .matrix-container {
-            position: relative;
-            width: 100%;
-            flex: 1;
-            overflow: hidden;
-
-            .matrix-column {
-                position: absolute;
-                left: var(--x);
-                top: var(--offset);
-                display: flex;
-                flex-direction: column;
-                animation: fall var(--speed) infinite linear;
-
-                .matrix-alphanum {
-                    color: #ffffff;
-                    opacity: 1;
-                    text-shadow: 0 0 8px var(--i-primary-color), 0 0 20px var(--i-primary-color);
-                    font-family: monospace;
-                    font-size: 0.85rem;
-                    line-height: 1.4;
-                    opacity: 0.7;
-                }
-            }
-        }
-
-
-    }
-
     .main-content {
         width: 100%;
         height: 100%;
         display: grid;
         grid-template-columns: 1fr;
-        align-content: center;
+        grid-template-rows: auto 1fr;
         justify-items: stretch;
         background: var(--i-surface-card);
         flex: 1;
         text-align: center;
         box-sizing: border-box;
-        padding: 2rem;
+        padding: 1.5rem;
+
+        h2 {
+            margin: 2rem;
+            align-self: start;
+        }
 
         form {
             width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+
+            .country-select {
+                width: 108px;
+                flex: 0 0 108px;
+                align-items: center;
+
+                ::ng-deep .p-select-label {
+                    text-overflow: clip !important;
+                    white-space: nowrap !important;
+                }
+
+                .country-selected {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 0.2rem;
+                    white-space: nowrap;
+                }
+
+                .country-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.3rem;
+                    width: 100%;
+                }
+
+                .country-dial {
+                    margin-left: auto;
+                    color: var(--p-text-muted-color);
+                    overflow: visible;
+                    text-overflow: clip;
+                    white-space: nowrap;
+                }
+
+                .country-flag {
+                    font-size: 1rem;
+                    line-height: 1;
+                    flex-shrink: 0;
+                }
+            }
+        }
+
+        .form-submit {
+            margin-top: auto;
+            align-self: stretch;
         }
     }
 }
+
 
 @keyframes fall {
     0% {
