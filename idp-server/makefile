@@ -1,4 +1,7 @@
-.PHONY: wasm login register server run debug dev compile
+.PHONY: wasm login register server run debug dev compile clean
+
+clean:
+	cd ../idp-server && rm -rf src/priv
 
 wasm:
 	cd ../api_wasm && wasm-pack build --target web --out-dir ../frontend/auth_service/src/assets/wasm_package
@@ -19,7 +22,7 @@ server-debug:
 server-dev:
 	cd ../idp-server && RUST_LOG=debug cargo watch -x run
 
-run: wasm login server
+run: clean wasm login server
 
 debug: wasm login server-debug
 
