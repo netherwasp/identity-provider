@@ -1,3 +1,81 @@
+:host ::ng-deep {
+    .p-select-label {
+        text-overflow: clip !important;
+        white-space: nowrap !important;
+    }
+
+    .p-select-empty-message .p-select-overlay {
+        width: 100% !important;
+    }
+
+    .p-input-text {
+        margin: 0px;
+        padding: 0px;
+        gap: 0px;
+    }
+
+    h2 {
+        color: var(--i-primary-color);
+        font-weight: 800;
+        font-size: 1.75rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        text-shadow: 0 0 10px var(--i-primary-200);
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        color: var(--i-text-muted-color);
+        margin-bottom: 2.5rem;
+        font-size: 0.95rem;
+    }
+
+    a {
+        color: var(--i-primary-color);
+        cursor: pointer;
+        font-weight: 500;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.6rem;
+        color: var(--i-text-color);
+        margin-left: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    input {
+        width: 100%;
+        padding: 0.9rem 1.1rem;
+        background: var(--i-surface-100);
+        border: 1px solid var(--i-surface-300);
+        border-radius: 0;
+        font-size: 1rem;
+        color: var(--i-text-color);
+        font-family: var(--i-font-family);
+        transition: all 0.2s;
+        box-sizing: border-box;
+
+        &::placeholder {
+            color: var(--i-text-muted-color);
+        }
+    }
+
+    input:focus {
+        outline: none;
+        border-color: var(--i-primary-color);
+        box-shadow: 0 0 12px color-mix(in srgb, var(--i-primary-color) 50%, transparent);
+        background: var(--i-surface-100);
+    }
+}
+
 .matrix-rain {
     position: fixed;
     top: 0;
@@ -22,13 +100,28 @@
     border-radius: 0;
     height: 100%;
     width: 100%;
-    max-width: clamp(320px, 90vw, 640px);
+    max-width: clamp(320px, 90vw, 940px);
     max-height: clamp(480px, 90vh, 840px);
     box-shadow: 0 0 30px color-mix(in srgb, var(--i-primary-color) 40%, transparent);
     border: 1px solid var(--i-primary-color);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    position: relative;
+    animation: matrix-scan-reveal 0.5s ease-out both;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--i-primary-color);
+        box-shadow: 0 0 12px var(--i-primary-color), 0 0 24px var(--i-primary-color);
+        animation: matrix-scan-line 0.5s ease-out both;
+        z-index: 2;
+    }
 
     .main-content {
         width: 100%;
@@ -41,7 +134,7 @@
         flex: 1;
         text-align: center;
         box-sizing: border-box;
-        padding: 1.5rem;
+        padding: 1.2rem;
 
         h2 {
             margin: 2rem;
@@ -54,127 +147,112 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            gap: 0.8rem;
 
-            .country-select {
-                width: 108px;
-                flex: 0 0 108px;
+            .personals-sect {
+                margin: 0px;
+                padding: 0px;
+
+                .country-select {
+                    width: 108px;
+                    flex: 0 0 108px;
+                    align-items: center;
+
+
+                    .flag-wrapper {
+                        display: inline-flex;
+                        width: 12px;
+                        height: auto;
+                        overflow: hidden;
+                        border-radius: 2px;
+                        flex-shrink: 0;
+                    }
+
+                    .flag-img {
+                        width: 100%;
+                        height: 100%;
+                        object-position: center;
+                    }
+
+                    .country-selected {
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.2rem;
+                        white-space: nowrap;
+                    }
+
+                    .country-option {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.3rem;
+                        width: 360px;
+                    }
+
+                    .country-dial {
+                        margin-left: auto;
+                        color: var(--i-text-muted-color);
+                        overflow: visible;
+                        text-overflow: clip;
+                        white-space: nowrap;
+                    }
+                }
+            }
+
+            .profile-sect {
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .footer-sect {
+                width: 100%;
+                height: 20%;
+                display: flex;
+                flex-direction: column;
                 align-items: center;
+                justify-content: flex-end;
+                gap: 12px;
 
-                ::ng-deep .p-select-label {
-                    text-overflow: clip !important;
-                    white-space: nowrap !important;
+                p {
+                    margin: 0px;
                 }
 
-                .country-selected {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.2rem;
-                    white-space: nowrap;
-                }
-
-                .country-option {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.3rem;
-                    width: 100%;
-                }
-
-                .country-dial {
-                    margin-left: auto;
-                    color: var(--p-text-muted-color);
-                    overflow: visible;
-                    text-overflow: clip;
-                    white-space: nowrap;
-                }
-
-                .country-flag {
-                    font-size: 1rem;
-                    line-height: 1;
-                    flex-shrink: 0;
+                .p-button {
+                    margin: 0px
                 }
             }
         }
 
         .form-submit {
-            margin-top: auto;
             align-self: stretch;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 1.25rem;
         }
     }
 }
 
-
-@keyframes fall {
+@keyframes matrix-scan-reveal {
     0% {
-        transform: translateY(-100%);
+        opacity: 0;
+        clip-path: inset(0 0 100% 0);
     }
 
     100% {
-        transform: translateY(100vh);
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
     }
 }
 
-h2 {
-    color: var(--i-primary-color);
-    font-weight: 800;
-    font-size: 1.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-shadow: 0 0 10px var(--i-primary-200);
-    margin-bottom: 0.5rem;
-}
-
-p {
-    color: var(--i-text-muted-color);
-    margin-bottom: 2.5rem;
-    font-size: 0.95rem;
-}
-
-a {
-    color: var(--i-primary-color);
-    cursor: pointer;
-    font-weight: 500;
-
-    &:hover {
-        text-decoration: underline;
+@keyframes matrix-scan-line {
+    0% {
+        top: 0%;
+        opacity: 1;
     }
-}
 
-.input-group {
-    text-align: left;
-    margin-bottom: 1.25rem;
-}
-
-label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-    color: var(--i-text-color);
-    margin-left: 0.25rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-input {
-    width: 100%;
-    padding: 0.9rem 1.1rem;
-    background: var(--i-surface-100);
-    border: 1px solid var(--i-surface-300);
-    border-radius: 0;
-    font-size: 1rem;
-    color: var(--i-text-color);
-    font-family: var(--i-font-family);
-    transition: all 0.2s;
-    box-sizing: border-box;
-
-    &::placeholder {
-        color: var(--i-text-muted-color);
+    100% {
+        top: 100%;
+        opacity: 0;
     }
-}
-
-input:focus {
-    outline: none;
-    border-color: var(--i-primary-color);
-    box-shadow: 0 0 12px color-mix(in srgb, var(--i-primary-color) 50%, transparent);
-    background: var(--i-surface-100);
 }

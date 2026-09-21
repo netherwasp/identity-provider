@@ -18,9 +18,26 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { User, At, Lock, Unlock, Phone } from '@primeicons/angular';
+import { MessageModule } from 'primeng/message';
 import { MatrixRain } from '../../animation/matrix-rain/matrix-rain';
 import { COUNTRIES, Country } from '../../../interfaces/register-interface';
+
+export const confirmPasswordValidator: ValidatorFn = (
+  group: AbstractControl,
+): ValidationErrors | null => {
+  return group.get('password')?.value === group.get('confirmPassword')?.value
+    ? null
+    : { passwordMismatch: true };
+};
+
+export const fullNameValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
+  return !group.get('given_name')?.invalid &&
+    group.get('given_name')?.value?.trim()?.length > 0 &&
+    !group.get('family_name')?.invalid &&
+    group.get('family_name')?.value?.trim()?.length > 0
+    ? null
+    : { fullNameInvalid: true };
+};
 
 @Component({
   selector: 'app-register',
@@ -30,16 +47,12 @@ import { COUNTRIES, Country } from '../../../interfaces/register-interface';
     ReactiveFormsModule,
     ButtonModule,
     MatrixRain,
+    MessageModule,
     IftaLabelModule,
     InputTextModule,
     InputGroupModule,
     InputGroupAddonModule,
     SelectModule,
-    User,
-    At,
-    Lock,
-    Unlock,
-    Phone,
   ],
   standalone: true,
   templateUrl: './register.html',
@@ -49,6 +62,10 @@ export class Register {
   registerForm: FormGroup;
   countries: Country[] = COUNTRIES;
 
+  async onLogIn() {
+    this.router.navigate(['/']);
+  }
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -57,29 +74,25 @@ export class Register {
       {
         username: ['', [Validators.required, Validators.minLength(6)]],
         email: ['', [Validators.required, Validators.email]],
-        given_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
-        family_name: ['', [Validators.required, Validators.pattern('^[a-zA-Z]+$')]],
+        given_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
+        family_name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
         country_code: [null as Country | null, Validators.required],
-        phone_number: ['', [Validators.required, Validators.pattern('^[0-9 ]{6,15}$')]],
+        phone_number: ['', [Validators.required, Validators.pattern(/^[0-9]{6,15}$/)]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', Validators.required],
       },
-      { validators: this.passwordsMatch } as AbstractControlOptions,
+      { validators: [confirmPasswordValidator, fullNameValidator] },
     );
   }
 
-  private passwordsMatch: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { passwordMismatch: true };
-  };
+  onPhoneInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const digitsOnly = input.value.replace(/[^0-9]/g, ''); // strip anything that's not 0-9
 
-  getCountryFlag(iso: string): string {
-    return iso
-      .toUpperCase()
-      .split('')
-      .map((char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
-      .join('');
+    if (input.value !== digitsOnly) {
+      input.value = digitsOnly;
+      this.registerForm.get('phone_number')?.setValue(digitsOnly, { emitEvent: false });
+    }
   }
 
   async onRegister() {
@@ -91,22 +104,12 @@ export class Register {
       this.registerForm.value;
 
     const national = String(phone_number).replace(/\s+/g, '').replace(/^0+/, '');
-    const claims = {
+    const payload = {
       ...rest,
+      password,
       phone_number: `${country_code.dial_code}${national}`, // standard OIDC claim name
     };
 
-    // const contact_number = `${country_code.dial_code}${phone_number}`;
-    // Standard OIDC claims payload — sent to the IDP's registration
-    // endpoint. `password` travels alongside it for credential creation but
-    // is not itself a claim.
-    const payload = {
-      claims,
-      password,
-    };
-
     console.log('Registration payload', JSON.stringify(payload));
-    // TODO: wire up HttpClient call to the Axum registration endpoint once
-    // the route is confirmed.
   }
 }
