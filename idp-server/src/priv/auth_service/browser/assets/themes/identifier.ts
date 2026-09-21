@@ -16,6 +16,19 @@ const Identifier = definePreset(Material, {
       900: '#003d0f',
       950: '#001f07',
     },
+    danger: {
+      50: '#fff0f0',
+      100: '#ffdcdc',
+      200: '#ffb0b0',
+      300: '#ff7070',
+      400: '#ff2424',
+      500: '#e60000',
+      600: '#b30000',
+      700: '#8a0000',
+      800: '#660000',
+      900: '#400000',
+      950: '#200000',
+    },
     colorScheme: {
       light: {
         surface: {
@@ -61,11 +74,11 @@ const Identifier = definePreset(Material, {
           800: '#a0a0b0',
           900: '#c0c0cc',
           950: '#e0e0e8',
-          ground: '{surface.50}',    // surface-ground
-          section: '{surface.50}',  // surface-section
-          card: '{surface.50}',    // surface-card
+          ground: '{surface.50}', // surface-ground
+          section: '{surface.50}', // surface-section
+          card: '{surface.50}', // surface-card
           overlay: '{surface.200}', // surface-overlay
-          border: '{surface.300}',  // surface-border
+          border: '{surface.300}', // surface-border
           hover: '{surface.400}',
         },
         primary: {
@@ -90,13 +103,96 @@ const Identifier = definePreset(Material, {
       paddingX: '1.25rem',
       paddingY: '0.75rem',
     } as any,
+
     inputtext: {
-      borderRadius: '0',
+      root: {
+        borderRadius: '0',
+        background: '{surface.100}',
+        color: '{text.color}',
+        placeholderColor: '{text.mutedColor}',
+        borderColor: '{surface.300}',
+        focusBorderColor: '{primary.color}',
+        invalidColor: '{danger.400}',
+      },
+      focusRing: {
+        width: '0',
+        style: 'none',
+        color: 'transparent',
+        shadow: '0 0 12px color-mix(in srgb, var(--p-primary-color) 50%, transparent)',
+      },
     } as any,
+
+    inputgroup: {
+      addon: {
+        background: '{surface.100}',
+        borderColor: '{surface.300}',
+        color: '{text.mutedColor}',
+      },
+    } as any,
+
+    iftalabel: {
+      root: {
+        color: '{text.mutedColor}',
+        focusColor: '{primary.400}',
+        invalidColor: '{danger.400}',
+      },
+    } as any,
+
+    select: {
+      root: {
+        background: '{surface.100}',
+        borderColor: '{surface.300}',
+        color: '{text.color}',
+        borderRadius: '0',
+        hoverBorderColor: '{primary.color}',
+        focusBorderColor: '{primary.color}',
+        placeholderColor: '{text.mutedColor}',
+        paddingX: '0.75rem',
+        paddingY: '0.75rem',
+        focusRing: {
+          width: '0',
+          style: 'none',
+          color: 'transparent',
+          shadow: '0 0 12px color-mix(in srgb, var(--p-primary-color) 50%, transparent)',
+        },
+      },
+
+      dropdown: {
+        width: '2.5rem',
+        color: '{text.mutedColor}',
+        hoverColor: '{primary.color}',
+      },
+
+      overlay: {
+        background: '{surface.100}',
+        borderColor: '{primary.color}',
+        borderRadius: '0',
+        color: '{text.color}',
+        shadow: '0 0 30px color-mix(in srgb, var(--p-primary-color) 40%, transparent)',
+      },
+
+      option: {
+        color: '{text.color}',
+        background: '{surface.100}',
+        focusBackground: '{surface.300}',
+        focusColor: '{primary.300}',
+        selectedBackground: '{primary.color}',
+        selectedColor: '{primary.contrastColor}',
+        selectedFocusBackground: '{primary.300}',
+        selectedFocusColor: '{primary.contrastColor}',
+        borderRadius: '0',
+      },
+
+      optionGroup: {
+        background: '{surface.200}',
+        color: '{text.mutedColor}',
+      },
+    } as any,
+
     card: {
       borderRadius: '2',
-      // shadow: '0 0 20px rgba(0, 255, 65, 0.3)', // green glow
     } as any,
+
     datatable: {
       headerBorderColor: '{primary.400}',
     } as any,
