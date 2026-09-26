@@ -56,6 +56,6 @@ pub async fn authentication_request(json_string: &str) -> Result<JsValue, JsValu
 
             Ok(response.into())
         }
-        _ => Err(format!("Failed to parse AuthLogin from: {}", json_string).into()),
+        _ => Err(format!("Failed to parse login payload").into()),
     }
 }
